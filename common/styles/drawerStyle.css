@@ -1,0 +1,620 @@
+@charset 'utf-8';
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.loading {
+    overflow: hidden;
+    height: 100vh;
+}
+
+header {
+    position: relative;
+    max-width: 375px;
+    height: 667px;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    width: 48px;
+    height: 48px;
+    position: fixed;
+    top: 4px;
+    right: 4px;
+    justify-content: center;
+    background: radial-gradient(circle, #070707a4, #070707a4 100%);
+    border-radius: 50%;
+    z-index: 10000;
+    padding-inline: 0;
+}
+
+.headerInner {
+    position: absolute;
+    padding-inline: clamp(20px, -3.84px + 6.3572vw, 83px);
+    /* max-width: clamp(375px, 101vw, 1366px); */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.separateDiv {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.bar0 {
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background-color: rgb(255, 255, 255);
+    margin-inline: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.bar1 {
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background-color: rgb(255, 255, 255);
+    margin-inline: auto;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.bar2 {
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background-color: rgb(255, 255, 255);
+    margin-inline: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+picture {
+    display: block;
+    height: 100%;
+}
+
+picture img {
+    height: 100%;
+}
+
+.flavor {
+    font-size: clamp(0.7500rem, 0.5608rem + 0.8073vw, 1.2500rem);
+    line-height: clamp(1.2000rem, 0.8973rem + 1.2916vw, 2.0000rem);
+    color: #ffffff;
+    text-align: justify;
+    width: clamp(247px, 35vw, 467px);
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    transform: translateX(100%);
+    background: linear-gradient(to bottom, #000000B3, #666666B3 100%);
+    width: 225px;
+    height: 667px;
+    z-index: 9999;
+    margin: 0;
+}
+
+.menuUl {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 84px;
+    /* padding-block: 0; */
+}
+
+header li a {
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: #666666;
+    font-size: clamp(1.2500rem, 1.1620rem + 0.3756vw, 1.5000rem);
+    line-height: clamp(1.2500rem, 1.1620rem + 0.3756vw, 1.5000rem);
+}
+
+.menuList {
+    color: white;
+    margin-bottom: 60px;
+    font-size: clamp(1.2500rem, 1.1620rem + 0.3756vw, 1.5000rem);
+    line-height: clamp(1.2500rem, 1.1620rem + 0.3756vw, 1.5000rem);
+}
+
+.menuLi0,
+.menuLi3,
+.menuLi4 {
+    margin-bottom: 40px;
+}
+
+.menuLi1,
+.menuLi2 {
+    margin-bottom: 20px;
+}
+
+.Menuopen {
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out;
+}
+
+.animate {
+    transition: transform 0.3s ease-in-out;
+}
+
+.logoSubTitleSettings {
+    margin: clamp(12px, 2vw, 20px) 0 0 clamp(8px, 2vw, 20px);
+    width: clamp(101px, 10vw, 133px);
+    height: clamp(40px, 4vw, 54px);
+}
+
+/*　PC版では消えるハンバーガー用のロゴ */
+
+.logoSubTitleTaipei {
+    margin-top: 3px;
+    width: 111px;
+}
+
+.logoSubTitleTaichung {
+    margin-top: 2px;
+    width: 111px;
+}
+
+.logoSubTitleTainan {
+    margin-top: 4px;
+    width: 111px;
+}
+
+/*　ここまでがハンバーガーのロゴ */
+
+.logoTitleTaiwan {
+    margin-top: clamp(175px, calc(325px - 11vw), 200px);
+    margin-left: clamp(0px, -52.98px + 14.1271vw, 140px);
+    width: clamp(335px, 58vw, 780px);
+}
+
+.logoTitleTaipei {
+    margin: clamp(72px, 63.68px + 2.2200vw, 94px) auto 0 clamp(68px, -12.22px + 21.3925vw, 280px);
+    width: clamp(199px, 24vw, 300px);
+}
+
+.logoTitleTaichung {
+    margin: clamp(69px, 59.54px + 2.5227vw, 94px) auto 0 clamp(68px, -12.22px + 21.3925vw, 280px);
+    width: clamp(199px, 22vw, 300px);
+}
+
+.logoTitleTainan {
+    margin: clamp(67px, 56.78px + 2.7245vw, 94px) auto 0 clamp(68px, -12.22px + 21.3925vw, 280px);
+    width: clamp(199px, 22vw, 300px);
+}
+
+.hamburger.active .bar0 {
+    transform: translateY(11px) rotate(45deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+.hamburger.active .bar1 {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.hamburger.active .bar2 {
+    transform: translateY(-11px) rotate(-45deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+.imageDivDifference {
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: clamp(20px, 12.43px + 2.0182vw, 40px);
+    align-items: flex-start;
+}
+
+.imageDiv {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: clamp(20px, 12.43px + 2.0182vw, 40px);
+    align-items: flex-start;
+}
+
+.logoFacebook,
+.logoX,
+.logoInstagram {
+    height: 32px;
+    cursor: pointer;
+}
+
+footer {
+    max-width: 100%;
+    height: clamp(349px, 296.02px + 14.1271vw, 489px);
+    background-color: #007AB7;
+    padding-top: clamp(20px, 12.96px + 1.8779vw, 40px);
+}
+
+.footerInner {
+    position: relative;
+    width: 100%;
+    padding-inline: clamp(20px, 7vw, 83px);
+}
+
+.menuFooter ul {
+    display: flex;
+    flex-direction: column;
+    /* pageのcssの打ち消し */
+    margin: 0;
+    padding-block: 0;
+    margin: clamp(20px, 16.97px + 0.8073vw, 28px) auto 40px;
+    width: clamp(195px, 143.16px + 13.8244vw, 332px);
+}
+
+.nationalFlag {
+    display: block;
+    margin-inline: auto;
+    width: clamp(32px, 19.89px + 3.2291vw, 64px);
+}
+
+.footerSubTitle {
+    position: absolute;
+    display: block;
+    width: 71px;
+}
+
+.imageDiv2 {
+    width: clamp(142px, 126.52px + 4.1271vw, 182.9px);
+    display: flex;
+    column-gap: clamp(20px, 12.96px + 1.8779vw, 40px);
+    margin: 0 auto;
+}
+
+footer li a {
+    display: block;
+    color: white;
+    font-family: "Noto Sans JP", sans-serif;
+    font-size: clamp(0.7500rem, 0.5608rem + 0.8073vw, 1.2500rem);
+    line-height: clamp(0.75rem, 0.5608rem + 0.8073vw, 1.25rem);
+}
+
+.menuLi {
+    border-bottom: 1px solid #ffffff;
+    padding-bottom: clamp(5px, 2.54px + 0.6573vw, 12px);
+}
+
+.listItem0,
+.listItem1,
+.listItem2 {
+    margin: 0 0 clamp(12px, 9.18px + 0.7512vw, 20px);
+}
+
+.listItem3 {
+    margin: 0 0 clamp(11.2px, 8.10px + 0.8263vw, 20px);
+}
+
+.listItem4 {
+    margin: 0 0 clamp(12px, 9.18px + 0.7512vw, 20px);
+}
+
+.footerHr {
+    border: solid 1px #03A9F4;
+    margin: 12px 0;
+}
+
+.footerLogo {
+    width: 71px;
+    margin-right: 24px;
+}
+
+small {
+    display: block;
+    width: clamp(175px, 162.68px + 3.2864vw, 210px);
+    color: #ffffff;
+    margin-inline: auto;
+    font-family: "Noto Sans JP", sans-serif;
+    font-size: clamp(0.6250rem, 0.5810rem + 0.1878vw, 0.7500rem);
+    line-height: clamp(0.6250rem, 0.5810rem + 0.1878vw, 0.7500rem);
+}
+
+#pageTop {
+    position: fixed;
+
+    display: inline-block;
+
+    right: 5px;
+    bottom: 5px;
+
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+    border: none;
+
+
+    color: #fff;
+
+    /* 最初は非表示 */
+    opacity: 0;
+    visibility: hidden;
+
+    transition: .3s;
+
+    cursor: pointer;
+
+    z-index: 9998;
+}
+
+#pageTop img {
+    width: 100%;
+}
+
+/* 表示 */
+#pageTop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#pageTop.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/*----------ローディング画面----------*/
+#loading {
+    position: fixed;
+    inset: 0;
+
+    background: #007AB7;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 99999;
+
+    transition: opacity .8s;
+}
+
+.loadingLogo {
+
+    width: clamp(120px, 20vw, 260px);
+
+    opacity: 0;
+
+    animation: logoFade 2s ease forwards;
+}
+
+#loading {
+    animation: blackout 1.5s forwards;
+}
+
+#loading {
+    animation: bgChange 2s forwards;
+}
+
+@keyframes bgChange {
+    0% {
+        background: #007AB7;
+    }
+
+    95% {
+        background: #007AB7;
+    }
+
+    100% {
+        background: #000;
+    }
+}
+
+@keyframes logoFade {
+
+    0% {
+        opacity: 0;
+        /*transform: scale(.8);*/
+    }
+
+    30% {
+        opacity: 1;
+        /*transform: scale(1);*/
+    }
+
+    70% {
+        opacity: 1;
+        /*transform: scale(1);*/
+    }
+
+    95% {
+        opacity: 0;
+        /*transform: scale(.8);*/
+    }
+
+}
+
+@media screen and (min-width:376px) {
+
+    header {
+        max-width: 100%;
+        width: 100%;
+        height: 768px;
+    }
+
+    header picture img {
+        display: block;
+        max-width: 100%;
+        width: 100%;
+        height: 768px;
+        object-fit: cover;
+    }
+
+}
+
+@media screen and (min-width:768px) {
+
+    #pageTop {
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .hamburger {
+        display: none;
+    }
+
+    .logoSubTitleTaipei,
+    .logoSubTitleTaichung,
+    .logoSubTitleTainan {
+        display: none;
+    }
+
+    .menu {
+        width: 100%;
+        height: 94px;
+        transform: translateX(0);
+        background: linear-gradient(to bottom, rgb(122, 142, 197), rgba(0, 0, 0, 0.021) 100%);
+        position: fixed;
+        border-bottom: none;
+        padding-inline: clamp(20px, -3.84px + 6.3572vw, 83px);
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .taipeiMenu {
+        background: linear-gradient(to bottom, #6cb9d8, rgba(0, 0, 0, 0.021) 100%);
+    }
+
+    .taichuMenu {
+        background: linear-gradient(to bottom, rgb(221, 160, 90), rgba(0, 0, 0, 0.021) 100%);
+    }
+
+    .tainanMenu {
+        background: linear-gradient(to bottom, #458b6b, rgba(0, 0, 0, 0.021) 100%);
+    }
+
+    .menuUl {
+        flex-direction: row;
+        column-gap: 20px;
+        align-items: normal;
+        margin: 50px 20px 0 0;
+        padding-block: 0;
+    }
+
+    .menuList {
+        display: none;
+    }
+
+    .menuLi0,
+    .menuLi1,
+    .menuLi2,
+    .menuLi3,
+    .menuLi4 {
+        margin: 0 0 10px;
+    }
+
+    header li a {
+        display: inline-block;
+        text-decoration: none;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px #050505;
+        transition: transform .3s ease-in-out;
+    }
+
+    header li a:hover {
+        transform: scale(1.2);
+    }
+
+    .imageDiv {
+        margin-left: 20px;
+    }
+
+    .logoFacebook,
+    .logoX,
+    .logoInstagram {
+        transition: transform .3s ease-in-out;
+    }
+
+    .logoFacebook:hover,
+    .logoInstagram:hover,
+    .logoX:hover {
+        transform: scale(1.2);
+    }
+
+    .flavor {
+        margin-right: 20px;
+    }
+
+    .move {
+        transform: translateY(-30px);
+        transition: transform .3s ease-in-out;
+    }
+
+    .moveDis {
+        transform: translateY(0px);
+        transition: transform .3s ease-in-out;
+    }
+
+    .move:hover {
+        transform: translateY(0px);
+    }
+
+    footer nav {
+        margin: 0;
+        flex: 1;
+    }
+
+    footer li a {
+        transition: transform .3s ease-in-out;
+        transform-origin: left center;
+    }
+
+    footer li a:hover {
+        transform: scale(1.2);
+        text-decoration: underline 0px;
+    }
+
+
+    .menuFooter ul {
+        margin: 0;
+    }
+
+    .footerSubTitle {
+        position: static;
+        width: clamp(71px, 0.99px + 18.6680vw, 256px);
+    }
+
+    .imageDiv2 {
+        margin: 0;
+        align-items: flex-end;
+        flex: 1;
+        justify-content: flex-end;
+    }
+
+    .footerFlexDiv {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        margin: 28px 20px 20px;
+    }
+
+    small {
+        margin: 20px auto;
+    }
+}
+
+@media screen and (max-width:930px) {
+
+    header .menu {
+        justify-content: flex-end;
+    }
+}

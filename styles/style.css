@@ -1,0 +1,723 @@
+@charset "utf-8";
+
+/* #region header 共通 */
+
+html {
+    scroll-behavior: smooth;
+}
+
+:root {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #f4f4f4;
+}
+
+html {
+    font-size: 100%;
+    /* 16px */
+}
+
+main>section:not(.formosaSection, .gallerySection) {
+    margin-inline: clamp(20px, -3.84px + 6.3572vw, 83px);
+}
+
+/* イントロダクション */
+
+.introText {
+    display: block;
+    font-size: clamp(0.7500rem, 0.5608rem + 0.8073vw, 1.2500rem);
+    width: 100%;
+    text-align: justify;
+    line-height: clamp(1.2000rem, 0.8973rem + 1.2916vw, 2.0000rem);
+    margin-block: 12px;
+}
+
+.intro span {
+    max-width: 223px;
+    width: 100%;
+    height: 1px;
+    background: #000000;
+    transform: rotate(180deg);
+    /* margin-block: 1rem; */
+}
+
+.intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* イントロダクション */
+
+/* 見出し */
+
+.travelSection .container,
+.eventSection .container,
+.gallerySection .container {
+    display: flex;
+    justify-content: center;
+}
+
+.midasi {
+    position: relative;
+    display: inline-block;
+}
+
+.midasi img {
+    display: block;
+    max-width: clamp(220px, 102.69px + 31.2815vw, 530px);
+    width: 100%;
+}
+
+.text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+    font-size: clamp(1.5000rem, 0.9324rem + 2.4218vw, 3.0000rem);
+    line-height: clamp(1.5000rem, 0.9324rem + 2.4218vw, 3.0000rem);
+}
+
+.small {
+    font-size: 50%;
+}
+
+/* 見出し */
+
+/* #endregion */
+
+/* #region header formosaSection */
+.formosaSection {
+    position: relative;
+}
+
+.formosaContainer1 {
+    max-width: clamp(132px, 45.35px + 23.1080vw, 361px);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    margin-inline: auto;
+}
+
+.formosaContainer2 {
+    max-width: clamp(223px, 148.45px + 19.8789vw, 420px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-inline: auto;
+}
+
+.imageContainer {
+    max-width: clamp(335px, 221.10px + 30.3734vw, 636px);
+    width: 100%;
+    height: 139px;
+    overflow: hidden;
+    margin: 60px auto;
+    display: flex;
+    align-items: center;
+}
+
+.formosaSection img {
+    display: block;
+    height: 100%;
+    margin-inline: auto;
+    width: 100%;
+    object-fit: cover;
+}
+
+.formosa1 {
+    width: 100%;
+    height: clamp(407px, 387.70px + 5.1463vw, 458px);
+    background-image: url(../images/formosaBackground1Sp.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: -1;
+    padding: clamp(20px, -3.84px + 6.3572vw, 83px);
+}
+
+.formosa2 {
+    width: 100%;
+    height: clamp(399px, 376.67px + 5.9536vw, 458px);
+    background-image: url(../images/formosaBackground2Sp.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: -1;
+    padding: clamp(20px, -2.70px + 6.0545vw, 80px) clamp(20px, -3.84px + 6.3572vw, 83px) clamp(60px, 52.43px + 2.0182vw, 80px);
+}
+
+.formosa {
+    font-size: clamp(1.2500rem, 0.5878rem + 2.8254vw, 3.0000rem);
+    line-height: clamp(1.2500rem, 0.5878rem + 2.8254vw, 3.0000rem);
+    display: block;
+}
+
+.formosaContainer1::before {
+    content: "";
+    display: block;
+    width: clamp(32px, 4.75px + 7.2654vw, 104px);
+    height: clamp(24px, 3.57px + 5.4490vw, 78px);
+    background-image: url(../common/images/nationalFlag.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    margin: 0 auto 40px;
+}
+
+.text1 {
+    display: block;
+    font-size: clamp(0.7500rem, 0.2770rem + 2.0182vw, 2.0000rem);
+    line-height: clamp(0.7500rem, 0.2770rem + 2.0182vw, 2.0000rem);
+    position: relative;
+    margin: 20px 0 0;
+}
+
+.textBar {
+    display: block;
+    max-width: clamp(132px, 45.35px + 23.1080vw, 361px);
+    width: 100%;
+    height: 1px;
+    background-color: #000000;
+    margin-top: 12px;
+}
+
+/* #endregion */
+
+/* #region header gallerySection */
+
+.gallerySection {
+    padding: 20px 0 clamp(40px, 24.86px + 4.0363vw, 80px);
+}
+
+.sliderContainer {
+    overflow: hidden;
+    max-width: clamp(375px, 0.00px + 100.0000vw, 100vw);
+    margin-inline: auto;
+    flex-shrink: 0;
+    justify-content: center;
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
+}
+
+.sliderContainer.dragging {
+    cursor: grabbing;
+}
+
+.slideImageContainer {
+    display: flex;
+    width: 100%;
+    column-gap: clamp(20px, -2.70px + 6.0545vw, 80px);
+    margin: clamp(80px, 49.73px + 8.0727vw, 160px) 0 clamp(20px, 4.86px + 4.0363vw, 60px);
+    justify-content: flex-start;
+    transition: transform .4s ease;
+}
+
+.slideImageContainer>div {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.slideImageContainer img {
+    width: 295px;
+    height: auto;
+    display: block;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+.dots {
+    display: flex;
+    align-items: center;
+    column-gap: clamp(40px, 32.43px + 2.0182vw, 60px);
+    justify-content: center;
+}
+
+.dot {
+    display: block;
+    width: clamp(18px, 14.22px + 1.0091vw, 28px);
+    height: clamp(18px, 14.22px + 1.0091vw, 28px);
+    background-color: #00000080;
+    border-radius: 50%;
+}
+
+.dotActive {
+    background-color: #000000;
+}
+
+.prev {
+    transform: rotate(270deg);
+    width: clamp(42px, 33.68px + 2.2200vw, 64px);
+    display: none;
+}
+
+.next {
+    transform: rotate(90deg);
+    width: clamp(42px, 33.68px + 2.2200vw, 64px);
+    display: none;
+}
+
+/* #endregion */
+
+/* #region header travelSection */
+
+.travelSection {
+    padding-top: 20px;
+}
+
+.travelSection .intro {
+    margin: 60px auto;
+    width: clamp(223px, 148.45px + 19.8789vw, 420px);
+}
+
+.travelSection span {
+    max-width: clamp(223px, 148.45px + 19.8789vw, 420px);
+    width: 100%;
+}
+
+.mapAll {
+    max-width: 255px;
+    height: 406px;
+    width: 100%;
+    margin-inline: auto;
+    position: relative;
+}
+
+.taiwanMap {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.map {
+    display: block;
+    margin-inline: auto;
+}
+
+.mapLink {
+    width: 59px;
+}
+
+.mapTaipei {
+    position: absolute;
+    top: 59px;
+    left: 196px;
+}
+
+.mapTaichung {
+    position: absolute;
+    top: 82px;
+    left: 4px;
+}
+
+.mapTainan {
+    position: absolute;
+    top: 280px;
+    left: 52px;
+}
+
+.travelSection .underBar {
+    display: block;
+    max-width: clamp(223px, 125.75px + 25.9334vw, 480px);
+    height: 1px;
+    margin: clamp(55px, 45.54px + 2.5227vw, 80px) auto clamp(60px, 52.43px + 2.0182vw, 80px);
+    background-color: #000000;
+}
+
+/* #endregion */
+
+/* #region header eventSection */
+
+.eventSection {
+    font-size: clamp(0.7500rem, 0.5608rem + 0.8073vw, 1.2500rem);
+    line-height: clamp(0.7500rem, 0.5608rem + 0.8073vw, 1.2500rem);
+    text-align: justify;
+    margin-block: 20px;
+}
+
+.event {
+    font-size: 24px;
+    position: relative;
+    top: 0;
+    left: 5.41rem;
+    width: fit-content;
+}
+
+.eventImageContainer {
+    margin-inline: auto;
+    width: clamp(335px, 242.29px + 24.7225vw, 580px);
+    height: clamp(194px, 117.56px + 20.3835vw, 396px);
+    overflow: hidden;
+    object-position: 0% 100%;
+}
+
+.eventImg {
+    width: 100%;
+    object-fit: cover;
+    object-position: 0% 100%;
+}
+
+.eventSection h3 {
+    text-align: center;
+}
+
+.h3Event1 {
+    font-size: clamp(1.2500rem, 0.8716rem + 1.6145vw, 2.2500rem);
+    line-height: clamp(1.2500rem, 0.8716rem + 1.6145vw, 2.2500rem);
+    margin: 60px auto 20px;
+}
+
+.h3Event2 {
+    font-size: clamp(1.2500rem, 0.8716rem + 1.6145vw, 2.2500rem);
+    line-height: clamp(2.0000rem, 1.3946rem + 2.5832vw, 3.6000rem);
+    margin: 40px auto 20px;
+}
+
+.eventSection h4 {
+    margin: 20px auto 8px;
+    width: fit-content;
+    font-weight: bold;
+}
+
+.eventText {
+    max-width: 223px;
+    width: 100%;
+    margin: 0.75rem 0;
+    line-height: clamp(1.2000rem, 0.8973rem + 1.2916vw, 2.0000rem);
+    position: relative;
+}
+
+.eventDate {
+    width: fit-content;
+    margin: 8px auto 20px;
+}
+
+/* #endregion */
+
+/* #region header informationSection */
+
+.informationSection {
+    /* height: 624px; */
+    padding: 20px 0 0;
+    margin-bottom: 60px;
+}
+
+.inner {
+    border: solid 1px #8f8f8f;
+    padding: clamp(20px, 12.43px + 2.0182vw, 40px) clamp(20px, 12.43px + 2.0182vw, 40px) clamp(0px, -30.27px + 8.0727vw, 80px);
+}
+
+.informationSection h2 {
+    font-size: clamp(1.2500rem, 0.7770rem + 2.0182vw, 2.5000rem);
+    line-height: clamp(1.2500rem, 0.7770rem + 2.0182vw, 2.5000rem);
+    width: fit-content;
+    margin-inline: auto;
+}
+
+.informationSection li {
+    font-size: clamp(0.7500rem, 0.5608rem + 0.8073vw, 1.2500rem);
+    line-height: clamp(1.2000rem, 0.8973rem + 1.2916vw, 2.0000rem);
+}
+
+.informationSection ul {
+    text-align: justify;
+    margin: 40px 0;
+}
+
+/* #endregion */
+
+/* #region header mediaQuery */
+
+@media screen and (min-width:768px) {
+
+    /* #region header 共通　*/
+
+    .introText {
+        margin-block: clamp(12px, -6.16px + 4.8436vw, 60px);
+    }
+
+    .textBar {
+        height: 1px;
+        margin-top: 20px;
+    }
+
+    .intro span {
+        max-width: 420px;
+    }
+
+    /* #endregion */
+
+    /* #region header formosaSection media */
+
+    .formosaSection {
+        background-position: 16.7% 80px;
+        background-size: 104px;
+        padding-top: 0;
+    }
+
+    .formosa1 {
+        background-image: url(../images/formosaBackground1.jpg);
+        display: flex;
+        justify-content: space-between;
+        gap: 163px;
+        object-fit: cover;
+    }
+
+    .formosa2 {
+        background-image: url(../images/formosaBackground2.jpg);
+        display: flex;
+        justify-content: space-between;
+        gap: 104px;
+        object-fit: cover;
+    }
+
+    .formosaContainer1,
+    .formosaContainer2 {
+        margin: 0 0 0 1.464vw;
+    }
+
+    .formosaContainer1::before {
+        margin: 0 0 100px 14.65vw;
+    }
+
+    .formosa {
+        text-align: left;
+    }
+
+    .formosaSection img {
+        margin: 0;
+        transition: transform .3s ease-in-out;
+    }
+
+    .formosaSection img:hover {
+        transform: scale(1.2);
+    }
+
+    .imageContainer {
+        height: 298px;
+    }
+
+    /* #endregion */
+
+    /* #region header gallerySection media */
+
+    .gallerySection .container {
+        display: flex;
+        justify-content: flex-start;
+        margin-left: 20px;
+    }
+
+    .gallerySection .slideImageContainer img {
+        transition: transform .3s ease-in-out;
+    }
+
+    .gallerySection .slideImageContainer img:hover {
+        transform: scale(1.2);
+    }
+
+    .prev {
+        display: block;
+        cursor: pointer;
+    }
+
+    .next {
+        display: block;
+        cursor: pointer;
+    }
+
+    /* #endregion */
+
+    /* #region header travelSection media */
+
+    .travelSection .container {
+        margin: 0 1.464vw 0 0;
+        justify-content: flex-end;
+    }
+
+    .travelDesign {
+        display: flex;
+        justify-content: space-between;
+        /* gap: 220px; */
+        margin: 120px 80px 80px;
+    }
+
+    .travelSection .intro {
+        justify-content: center;
+        margin-inline: 0;
+    }
+
+    .mapAll {
+        max-width: 400px;
+        height: 611px;
+        margin: 0;
+    }
+
+    .mapLink {
+        width: 99px;
+    }
+
+    .map {
+        max-width: 225px;
+        height: 508px;
+    }
+
+    .mapTaipei {
+        top: 61px;
+        left: 300px;
+        transition: transform .3s ease-in-out;
+    }
+
+    .mapTaichung {
+        top: 90px;
+        left: 0px;
+        transition: transform .3s ease-in-out;
+    }
+
+    .mapTainan {
+        top: 398px;
+        left: 63px;
+        transition: transform .3s ease-in-out;
+    }
+
+    .mapTaipei:hover,
+    .mapTaichung:hover,
+    .mapTainan:hover {
+        transform: scale(1.2);
+    }
+
+    /* #endregion */
+
+    /* #region header eventSection media */
+
+    .eventSection {
+        padding-bottom: 80px;
+    }
+
+    .eventSection .container {
+        margin: 0 0 0 1.464vw;
+        justify-content: flex-start;
+    }
+
+    .eventSection h3 {
+        text-align: justify;
+    }
+
+    .eventSection h4 {
+        margin: 0;
+    }
+
+    .eventDate {
+        margin: 32px 0 32px;
+    }
+
+    .eventWrap {
+        display: flex;
+        justify-content: space-between;
+        margin-inline: 20px;
+    }
+
+    .eventWrapLeft {
+        max-width: 580px;
+    }
+
+    .eventWrapRight {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        max-width: 580px;
+        width: 100%;
+    }
+
+    .h3Event1 {
+        margin: 120px 0 40px;
+    }
+
+    .h3Event2 {
+        margin: 80px 0 40px;
+
+    }
+
+    .eventText {
+        max-width: 314px;
+        margin: 32px 0;
+    }
+
+    .eventSection img {
+        transition: transform .3s ease-in-out;
+    }
+
+    .eventSection img:hover {
+        transform: scale(1.2);
+    }
+
+    /* #endregion */
+
+    /* #region header informationSection media */
+    .informationSection {
+        padding-block: 80px;
+        margin-bottom: 0;
+    }
+
+    .informationWrap {
+        display: flex;
+        justify-content: space-between;
+        column-gap: 60px;
+        margin-top: 40px;
+    }
+
+    .inner {
+        max-width: 1040px;
+        width: 100%;
+        height: auto;
+        margin-inline: auto;
+    }
+
+    .informationSection ul {
+        margin: 40px 0 0;
+    }
+
+    .imageContainer {
+        overflow: hidden;
+        margin: 0;
+    }
+
+    .infoUl1 {
+        max-width: 450px;
+        width: 100%;
+        height: auto;
+    }
+
+    .infoUl2 {
+        max-width: 450px;
+        width: 100%;
+        height: auto;
+    }
+
+    /* #endregion */
+
+}
+
+@media screen and (max-width:1050px) {
+    .travelDesign {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .eventWrap {
+        column-gap: clamp(30px, 11.84px + 4.8436vw, 78px);
+    }
+
+    .travelSection .container {
+        justify-content: center;
+    }
+}
+
+
+/* #endregion */
