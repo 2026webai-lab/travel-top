@@ -1,0 +1,875 @@
+@charset "utf-8";
+
+/* ==========================================================
+   FORMOSA PASSPORT ― トークン定義
+   ========================================================== */
+:root {
+    --ink: #17332C;
+    --ink-soft: #24463C;
+    --paper: #F1E8D0;
+    --paper-deep: #E4D6AF;
+    --stamp-red: #A63A2E;
+    --gold: #AE8A46;
+    --line: rgba(23, 51, 44, 0.32);
+    --line-soft: rgba(23, 51, 44, 0.16);
+
+    --font-display: "Shippori Mincho", serif;
+    --font-body: "Zen Kaku Gothic New", sans-serif;
+    --font-mono: "Space Mono", monospace;
+
+    color-scheme: light;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 400;
+}
+
+main {
+    overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--stamp-red);
+    outline-offset: 3px;
+}
+
+/* 共通：ページ番号ラベル・見出し */
+.pageField {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--stamp-red);
+    margin: 0 0 12px;
+}
+
+.mono {
+    font-family: var(--font-mono);
+}
+
+main > section {
+    padding-inline: clamp(20px, 6vw, 96px);
+}
+
+/* ==========================================================
+   01. 表紙 (cover)
+   ========================================================== */
+.cover {
+    padding: 0 !important;
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    background: var(--ink);
+}
+
+.coverFrame {
+    position: absolute;
+    inset: clamp(10px, 2.4vw, 22px);
+    border: 1px solid rgba(241, 232, 208, 0.55);
+}
+
+.coverFrame::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(241, 232, 208, 0.25);
+    pointer-events: none;
+}
+
+.coverCorner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-color: var(--gold);
+    z-index: 3;
+}
+
+.coverCornerTL { top: -1px; left: -1px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+.coverCornerTR { top: -1px; right: -1px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+.coverCornerBL { bottom: -1px; left: -1px; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+.coverCornerBR { bottom: -1px; right: -1px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+
+.coverPhoto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.92);
+    opacity: 0;
+    animation: coverPhotoIn 1.4s ease forwards 0.15s;
+}
+
+.cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(23, 51, 44, 0.72) 0%, rgba(23, 51, 44, 0.18) 38%, rgba(23, 51, 44, 0.55) 100%);
+    z-index: 1;
+}
+
+.coverText {
+    position: absolute;
+    left: clamp(28px, 7vw, 88px);
+    bottom: clamp(90px, 16vh, 160px);
+    z-index: 2;
+    color: var(--paper);
+    max-width: 620px;
+}
+
+.coverField {
+    font-family: var(--font-mono);
+    font-size: clamp(0.65rem, 0.5vw + 0.5rem, 0.8rem);
+    letter-spacing: 0.08em;
+    color: var(--paper-deep);
+    margin: 0 0 18px;
+    opacity: 0;
+    animation: coverTextIn 0.9s ease forwards 0.5s;
+}
+
+.coverTitle {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(3.2rem, 4vw + 2rem, 6.4rem);
+    line-height: 1;
+    margin: 0 0 20px;
+    display: flex;
+    align-items: baseline;
+    gap: clamp(12px, 2vw, 24px);
+    opacity: 0;
+    animation: coverTextIn 0.9s ease forwards 0.7s;
+}
+
+.coverTitleSub {
+    font-family: var(--font-mono);
+    font-size: clamp(0.85rem, 1vw, 1.15rem);
+    letter-spacing: 0.12em;
+    font-weight: 400;
+    color: var(--gold);
+}
+
+.coverLede {
+    font-size: clamp(0.95rem, 0.4vw + 0.85rem, 1.15rem);
+    line-height: 1.9;
+    margin: 0;
+    opacity: 0;
+    animation: coverTextIn 0.9s ease forwards 0.9s;
+}
+
+@keyframes coverPhotoIn {
+    from { opacity: 0; transform: scale(1.06); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes coverTextIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.coverStamp {
+    position: absolute;
+    right: clamp(20px, 5vw, 64px);
+    top: clamp(28px, 6vh, 64px);
+    width: clamp(96px, 11vw, 150px);
+    z-index: 2;
+    opacity: 0;
+    animation: stampIn 1s cubic-bezier(.2, .9, .3, 1.2) forwards 1.15s;
+}
+
+@keyframes stampIn {
+    from { opacity: 0; transform: rotate(-30deg) scale(0.7); }
+    to { opacity: 1; transform: rotate(-14deg) scale(1); }
+}
+
+.stampSvg {
+    width: 100%;
+    height: auto;
+    display: block;
+    animation: stampSpin 40s linear infinite;
+}
+
+.stampSvgSmall {
+    animation-duration: 34s;
+}
+
+@keyframes stampSpin {
+    to { transform: rotate(360deg); }
+}
+
+.stampRing {
+    fill: none;
+    stroke: var(--stamp-red);
+    stroke-width: 2.5;
+}
+
+.coverStamp .stampRing,
+.coverStamp .stampRingInner {
+    stroke: var(--paper);
+}
+
+.stampRingInner {
+    fill: none;
+    stroke: var(--stamp-red);
+    stroke-width: 1;
+}
+
+.stampArcText {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    fill: var(--stamp-red);
+}
+
+.coverStamp .stampArcText {
+    fill: var(--paper);
+}
+
+.stampCenterText {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    fill: var(--paper);
+}
+
+.stampCenterTextSm {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--paper);
+}
+
+.scrollCue {
+    position: absolute;
+    left: clamp(28px, 7vw, 88px);
+    bottom: clamp(28px, 4vh, 44px);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: var(--paper-deep);
+    cursor: pointer;
+    padding: 4px;
+}
+
+.scrollCueLine {
+    width: 1px;
+    height: 34px;
+    background: var(--paper-deep);
+    position: relative;
+    overflow: hidden;
+}
+
+.scrollCueLine::after {
+    content: "";
+    position: absolute;
+    left: 0; top: -100%;
+    width: 100%; height: 100%;
+    background: var(--gold);
+    animation: cueDrip 2.2s ease-in-out infinite;
+}
+
+@keyframes cueDrip {
+    0% { top: -100%; }
+    60% { top: 100%; }
+    100% { top: 100%; }
+}
+
+.scrollCueText {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+}
+
+/* MRZ 装飾帯 */
+.mrzStrip {
+    background: var(--ink);
+    color: rgba(241, 232, 208, 0.55);
+    padding: 14px clamp(20px, 6vw, 96px);
+}
+
+.mrzLine {
+    font-family: var(--font-mono);
+    font-size: clamp(0.55rem, 0.3vw + 0.5rem, 0.72rem);
+    letter-spacing: 0.03em;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ==========================================================
+   02. 招待状 (invitation)
+   ========================================================== */
+.invitation {
+    padding-block: clamp(64px, 10vh, 120px);
+    border-bottom: 1px dashed var(--line);
+}
+
+.invitationInner {
+    display: grid;
+    gap: clamp(32px, 5vw, 56px);
+    max-width: 1180px;
+    margin-inline: auto;
+}
+
+.invitationHeading {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.8rem, 1.6vw + 1.3rem, 2.6rem);
+    line-height: 1.45;
+    margin: 0 0 24px;
+}
+
+.invitationBody {
+    font-size: clamp(0.9rem, 0.3vw + 0.8rem, 1.05rem);
+    line-height: 2;
+    text-align: justify;
+    max-width: 46ch;
+    margin: 0;
+}
+
+.invitationPhoto {
+    position: relative;
+    justify-self: center;
+    max-width: 460px;
+    width: 100%;
+}
+
+.invitationPhoto img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: rotate(-1.6deg);
+    box-shadow: 0 18px 40px -18px rgba(23, 51, 44, 0.45);
+    border: 6px solid #fff;
+}
+
+.photoTape {
+    position: absolute;
+    width: 84px;
+    height: 26px;
+    background: rgba(174, 138, 70, 0.55);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    z-index: 2;
+}
+
+.photoTapeTop {
+    top: -12px;
+    left: -14px;
+    transform: rotate(-40deg);
+}
+
+.photoTapeBottom {
+    bottom: -12px;
+    right: -10px;
+    transform: rotate(-38deg);
+}
+
+@media (min-width: 860px) {
+    .invitationInner {
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: center;
+    }
+}
+
+/* ==========================================================
+   03. 写真ページ (photoPage)
+   ========================================================== */
+.photoPage {
+    padding-block: clamp(56px, 9vh, 100px);
+    border-bottom: 1px dashed var(--line);
+}
+
+.photoPageHeading {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.4vw + 1.2rem, 2.3rem);
+    margin: 0 0 40px;
+}
+
+.filmDeck {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filmViewport {
+    overflow: hidden;
+    flex: 1;
+    cursor: grab;
+}
+
+.filmViewport.dragging {
+    cursor: grabbing;
+}
+
+.filmTrack {
+    display: flex;
+    gap: clamp(20px, 3vw, 40px);
+    padding: 24px 4px 32px;
+    margin: 0;
+    list-style: none;
+    transition: transform 0.5s cubic-bezier(.2, .7, .3, 1);
+    will-change: transform;
+}
+
+.filmFrame {
+    flex: 0 0 auto;
+    width: clamp(200px, 22vw, 300px);
+    background: #fff;
+    padding: 10px 10px 26px;
+    box-shadow: 0 16px 32px -18px rgba(23, 51, 44, 0.4);
+    transform: rotate(calc(var(--r, 0) * 1deg));
+    position: relative;
+}
+
+.filmFrame:nth-child(1) { --r: -3; }
+.filmFrame:nth-child(2) { --r: 2; }
+.filmFrame:nth-child(3) { --r: -2; }
+.filmFrame:nth-child(4) { --r: 3; }
+.filmFrame:nth-child(5) { --r: -1; }
+
+.filmFrame::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    width: 34px;
+    height: 34px;
+    background: radial-gradient(circle, var(--paper-deep) 0 3px, transparent 4px);
+}
+
+.filmFrame img {
+    display: block;
+    width: 100%;
+    height: clamp(150px, 18vw, 230px);
+    object-fit: cover;
+}
+
+.filmArrow {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.filmArrow:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+/* ==========================================================
+   04. 査証区分 (regions)
+   ========================================================== */
+.regions {
+    padding-block: clamp(56px, 9vh, 100px);
+    border-bottom: 1px dashed var(--line);
+}
+
+.regionsHeading {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.4vw + 1.2rem, 2.3rem);
+    margin: 0 0 16px;
+}
+
+.regionsLede {
+    max-width: 56ch;
+    line-height: 1.9;
+    margin: 0 0 48px;
+}
+
+.regionRoute {
+    position: relative;
+    display: grid;
+    gap: 56px;
+    justify-items: center;
+    padding-block: 12px;
+}
+
+.regionPath {
+    display: none;
+}
+
+.regionStamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--ink);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: transform 0.3s ease;
+}
+
+.regionStamp.isVisible {
+    animation: regionIn 0.6s ease forwards;
+    animation-delay: calc(var(--i) * 0.12s);
+}
+
+@keyframes regionIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.regionStampCircle {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    border: 2px solid var(--stamp-red);
+    outline: 1px solid var(--stamp-red);
+    outline-offset: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.regionStampCircle img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.regionStamp:hover .regionStampCircle,
+.regionStamp:focus-visible .regionStampCircle {
+    transform: rotate(-6deg) scale(1.05);
+    box-shadow: 0 14px 30px -16px rgba(166, 58, 46, 0.6);
+}
+
+.regionStampName {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    text-align: center;
+}
+
+.regionStampName em {
+    display: block;
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--stamp-red);
+    margin-top: 4px;
+}
+
+@media (min-width: 860px) {
+    .regionRoute {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        min-height: 220px;
+        align-items: start;
+    }
+
+    .regionPath {
+        display: block;
+        position: absolute;
+        inset: 0 0 auto 0;
+        top: 58px;
+        width: 100%;
+        height: 220px;
+        pointer-events: none;
+    }
+
+    .regionPath path {
+        fill: none;
+        stroke: var(--line);
+        stroke-width: 1.5;
+        stroke-dasharray: 6 8;
+    }
+
+    .regionStamp:nth-child(2) { margin-top: 44px; }
+    .regionStamp:nth-child(3) { margin-top: 4px; }
+}
+
+/* ==========================================================
+   05. 搭乗券 (events)
+   ========================================================== */
+.events {
+    padding-block: clamp(56px, 9vh, 100px);
+    border-bottom: 1px dashed var(--line);
+}
+
+.eventsHeading {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.4vw + 1.2rem, 2.3rem);
+    margin: 0 0 40px;
+}
+
+.ticketList {
+    display: grid;
+    gap: 32px;
+}
+
+.ticket {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: #fff;
+    box-shadow: 0 20px 40px -24px rgba(23, 51, 44, 0.4);
+    position: relative;
+}
+
+.ticketMain {
+    display: grid;
+    gap: 0;
+}
+
+.ticketPhoto {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.ticketPhoto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ticketBody {
+    padding: clamp(20px, 3vw, 32px);
+}
+
+.ticketDest {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--stamp-red);
+    margin: 0 0 10px;
+}
+
+.ticketTitle {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.2rem, 0.6vw + 1rem, 1.5rem);
+    line-height: 1.4;
+    margin: 0 0 10px;
+}
+
+.ticketDate {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    margin: 0 0 16px;
+    color: var(--ink-soft);
+}
+
+.ticketText {
+    line-height: 1.9;
+    margin: 0;
+    text-align: justify;
+}
+
+.ticketStub {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px clamp(20px, 3vw, 32px);
+    border-top: 1px dashed var(--line);
+    position: relative;
+}
+
+.ticketStub::before,
+.ticketStub::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--paper);
+}
+
+.ticketStub::before { left: -10px; }
+.ticketStub::after { right: -10px; }
+
+.ticketStubLabel {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+}
+
+.ticketStubValue {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-right: auto;
+    padding-left: 10px;
+}
+
+.ticketStubBarcode {
+    width: 90px;
+    height: 26px;
+    background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 5px, var(--ink) 5px 6px, transparent 6px 10px);
+    opacity: 0.75;
+}
+
+@media (min-width: 780px) {
+    .ticket {
+        grid-template-columns: 1fr auto;
+    }
+
+    .ticketMain {
+        grid-template-columns: 0.9fr 1.1fr;
+    }
+
+    .ticketPhoto {
+        aspect-ratio: auto;
+        height: 100%;
+    }
+
+    .ticketStub {
+        flex-direction: column;
+        justify-content: center;
+        width: 130px;
+        border-top: none;
+        border-left: 1px dashed var(--line);
+    }
+
+    .ticketStub::before { top: -10px; left: 50%; transform: translateX(-50%); }
+    .ticketStub::after { top: auto; bottom: -10px; left: 50%; right: auto; transform: translateX(-50%); }
+
+    .ticketStubValue {
+        margin-right: 0;
+        padding-left: 0;
+        writing-mode: vertical-rl;
+    }
+
+    .ticketStubBarcode {
+        writing-mode: vertical-rl;
+        width: 26px;
+        height: 90px;
+        background: repeating-linear-gradient(0deg, var(--ink) 0 2px, transparent 2px 5px, var(--ink) 5px 6px, transparent 6px 10px);
+    }
+}
+
+/* ==========================================================
+   06. 旅券データページ (databook)
+   ========================================================== */
+.databook {
+    padding-block: clamp(56px, 9vh, 110px) clamp(80px, 10vh, 130px);
+}
+
+.databookInner {
+    max-width: 1180px;
+    margin-inline: auto;
+    border: 1px solid var(--line);
+    padding: clamp(28px, 4vw, 56px);
+    position: relative;
+    display: grid;
+    gap: 40px;
+}
+
+.databookStamp {
+    justify-self: center;
+    width: clamp(120px, 14vw, 160px);
+    position: relative;
+    text-align: center;
+}
+
+.databookFlag {
+    width: 46%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.databookHeading {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 1.4vw + 1.2rem, 2.3rem);
+    margin: 0 0 32px;
+}
+
+.databookGrid {
+    display: grid;
+    gap: 0;
+    margin: 0 0 40px;
+    border-top: 1px solid var(--line-soft);
+}
+
+.databookRow {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.databookRow dt {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+}
+
+.databookRow dd {
+    margin: 0;
+    line-height: 1.8;
+}
+
+.databookNotes {
+    display: grid;
+    gap: 28px;
+}
+
+.databookNote h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin: 0 0 10px;
+}
+
+.databookNote p {
+    line-height: 1.9;
+    margin: 0;
+    text-align: justify;
+}
+
+@media (min-width: 860px) {
+    .databookInner {
+        grid-template-columns: 200px 1fr;
+        align-items: start;
+    }
+
+    .databookNotes {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+footer {
+    background: var(--ink);
+    min-height: 40px;
+}
