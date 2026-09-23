@@ -1,8 +1,7 @@
 @charset "utf-8";
 
-/* ==========================================================
-   FORMOSA PASSPORT ― トークン定義
-   ========================================================== */
+/* 万一 drawerStyle.css が先に読み込まれない場合の保険として、
+   同じトークンをここにも定義しておく（値は必ず一致させること） */
 :root {
     --ink: #17332C;
     --ink-soft: #24463C;
@@ -16,12 +15,6 @@
     --font-display: "Shippori Mincho", serif;
     --font-body: "Zen Kaku Gothic New", sans-serif;
     --font-mono: "Space Mono", monospace;
-
-    color-scheme: light;
-}
-
-html {
-    scroll-behavior: smooth;
 }
 
 body {
@@ -35,21 +28,12 @@ main {
     overflow-x: clip;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.001ms !important;
-        transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-
 a:focus-visible,
 button:focus-visible {
     outline: 2px solid var(--stamp-red);
     outline-offset: 3px;
 }
 
-/* 共通：ページ番号ラベル・見出し */
 .pageField {
     font-family: var(--font-mono);
     font-size: 0.75rem;
@@ -72,9 +56,15 @@ main > section {
 .cover {
     padding: 0 !important;
     position: relative;
-    height: 100svh;
+    height: 100vh;
     min-height: 560px;
     background: var(--ink);
+}
+
+@supports (height: 100svh) {
+    .cover {
+        height: 100svh;
+    }
 }
 
 .coverFrame {
@@ -95,7 +85,6 @@ main > section {
     position: absolute;
     width: 22px;
     height: 22px;
-    border-color: var(--gold);
     z-index: 3;
 }
 
@@ -149,6 +138,7 @@ main > section {
     line-height: 1;
     margin: 0 0 20px;
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     gap: clamp(12px, 2vw, 24px);
     opacity: 0;
@@ -184,7 +174,7 @@ main > section {
 .coverStamp {
     position: absolute;
     right: clamp(20px, 5vw, 64px);
-    top: clamp(28px, 6vh, 64px);
+    top: clamp(84px, 12vh, 120px);
     width: clamp(96px, 11vw, 150px);
     z-index: 2;
     opacity: 0;
@@ -301,6 +291,7 @@ main > section {
     background: var(--ink);
     color: rgba(241, 232, 208, 0.55);
     padding: 14px clamp(20px, 6vw, 96px);
+    overflow: hidden;
 }
 
 .mrzLine {
@@ -410,13 +401,21 @@ main > section {
     gap: 10px;
 }
 
+/* JSが動かない場合でも横スクロールで全部見られるようにする（プログレッシブエンハンスメント） */
 .filmViewport {
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     flex: 1;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.js .filmViewport {
+    overflow: hidden;
     cursor: grab;
 }
 
-.filmViewport.dragging {
+.js .filmViewport.dragging {
     cursor: grabbing;
 }
 
@@ -426,8 +425,11 @@ main > section {
     padding: 24px 4px 32px;
     margin: 0;
     list-style: none;
-    transition: transform 0.5s cubic-bezier(.2, .7, .3, 1);
     will-change: transform;
+}
+
+.js .filmTrack {
+    transition: transform 0.5s cubic-bezier(.2, .7, .3, 1);
 }
 
 .filmFrame {
@@ -476,6 +478,11 @@ main > section {
     line-height: 1;
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
+    display: none;
+}
+
+.js .filmArrow {
+    display: block;
 }
 
 .filmArrow:hover {
@@ -523,12 +530,16 @@ main > section {
     gap: 14px;
     text-decoration: none;
     color: var(--ink);
-    opacity: 0;
-    transform: translateY(16px);
-    transition: transform 0.3s ease;
 }
 
-.regionStamp.isVisible {
+/* JS未実行時は最初から見えている。JSが動く時だけ、
+   スクロール演出のためにいったん隠して isVisible で見せる */
+.js .regionStamp {
+    opacity: 0;
+    transform: translateY(16px);
+}
+
+.js .regionStamp.isVisible {
     animation: regionIn 0.6s ease forwards;
     animation-delay: calc(var(--i) * 0.12s);
 }
@@ -867,9 +878,4 @@ main > section {
     .databookNotes {
         grid-template-columns: 1fr 1fr;
     }
-}
-
-footer {
-    background: var(--ink);
-    min-height: 40px;
 }

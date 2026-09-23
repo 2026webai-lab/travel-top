@@ -2,6 +2,7 @@
 <html lang="ja">
 
 <head>
+    <script>document.documentElement.classList.add('js');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="./common/reset.css">
@@ -10,8 +11,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./styles/style.css">
     <link rel="stylesheet" href="./common/styles/drawerStyle.css">
+    <link rel="stylesheet" href="./styles/style.css">
     <title>台湾観光案内 ― FORMOSA PASSPORT</title>
 </head>
 
@@ -19,16 +20,8 @@
     <header id="topPage"></header>
 
     <div id="loading">
-        <img src="./common/images/logo.svg" alt="ロゴ" class="loadingLogo">
+        <img src="./common/images/logo.svg" alt="読み込み中" class="loadingLogo">
     </div>
-
-    <!-- 表紙のスタンプ定義（SVG） -->
-    <svg width="0" height="0" style="position:absolute" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <defs>
-            <path id="stampArcHero" d="M 20,80 A 60,60 0 1 1 140,80" />
-            <path id="stampArcData" d="M 15,75 A 60,60 0 1 1 135,75" />
-        </defs>
-    </svg>
 
     <main>
 
@@ -49,9 +42,10 @@
                 </div>
 
                 <div class="coverStamp" aria-hidden="true">
-                    <svg viewBox="0 0 160 160" class="stampSvg">
-                        <circle cx="80" cy="80" r="72" class="stampRing" />
-                        <circle cx="80" cy="80" r="58" class="stampRingInner" />
+                    <svg viewBox="0 0 160 160" width="160" height="160" class="stampSvg">
+                        <circle cx="80" cy="80" r="72" class="stampRing" fill="none" stroke-width="2.5" />
+                        <circle cx="80" cy="80" r="58" class="stampRingInner" fill="none" stroke-width="1" />
+                        <path id="stampArcHero" d="M 20,80 A 60,60 0 1 1 140,80" fill="none" stroke="none" />
                         <text class="stampArcText">
                             <textPath href="#stampArcHero" xlink:href="#stampArcHero" startOffset="50%" text-anchor="middle">ENTRY・入境許可</textPath>
                         </text>
@@ -100,11 +94,11 @@
                 <button class="filmArrow filmArrowPrev" type="button" aria-label="前の写真">‹</button>
                 <div class="filmViewport">
                     <ul class="filmTrack" id="filmTrack">
-                        <li class="filmFrame"><img src="./images/slide1.jpg" alt="台湾の風景1"></li>
-                        <li class="filmFrame"><img src="./images/slide2.jpg" alt="台湾の風景2"></li>
-                        <li class="filmFrame"><img src="./images/slide3.jpg" alt="台湾の風景3"></li>
-                        <li class="filmFrame"><img src="./images/slide4.jpg" alt="台湾の風景4"></li>
-                        <li class="filmFrame"><img src="./images/slide5.jpg" alt="台湾の風景5"></li>
+                        <li class="filmFrame"><img src="./images/slide1.jpg" alt="台湾の風景1" loading="lazy"></li>
+                        <li class="filmFrame"><img src="./images/slide2.jpg" alt="台湾の風景2" loading="lazy"></li>
+                        <li class="filmFrame"><img src="./images/slide3.jpg" alt="台湾の風景3" loading="lazy"></li>
+                        <li class="filmFrame"><img src="./images/slide4.jpg" alt="台湾の風景4" loading="lazy"></li>
+                        <li class="filmFrame"><img src="./images/slide5.jpg" alt="台湾の風景5" loading="lazy"></li>
                     </ul>
                 </div>
                 <button class="filmArrow filmArrowNext" type="button" aria-label="次の写真">›</button>
@@ -119,7 +113,7 @@
 
             <div class="regionRoute">
                 <svg class="regionPath" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true">
-                    <path d="M 40,180 C 260,20 420,220 500,110 S 760,10 960,60" />
+                    <path d="M 40,180 C 260,20 420,220 500,110 S 760,10 960,60" fill="none" />
                 </svg>
 
                 <a class="regionStamp" href="./taipei/index.html" style="--i:0">
@@ -197,9 +191,10 @@
         <section class="databook">
             <div class="databookInner">
                 <div class="databookStamp" aria-hidden="true">
-                    <svg viewBox="0 0 160 160" class="stampSvg stampSvgSmall">
-                        <circle cx="80" cy="80" r="72" class="stampRing" />
-                        <circle cx="80" cy="80" r="58" class="stampRingInner" />
+                    <svg viewBox="0 0 160 160" width="160" height="160" class="stampSvg stampSvgSmall">
+                        <circle cx="80" cy="80" r="72" class="stampRing" fill="none" stroke-width="2.5" />
+                        <circle cx="80" cy="80" r="58" class="stampRingInner" fill="none" stroke-width="1" />
+                        <path id="stampArcData" d="M 15,75 A 60,60 0 1 1 135,75" fill="none" stroke="none" />
                         <text class="stampArcText">
                             <textPath href="#stampArcData" xlink:href="#stampArcData" startOffset="50%" text-anchor="middle">REPUBLIC OF CHINA・TAIWAN</textPath>
                         </text>

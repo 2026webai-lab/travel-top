@@ -1,102 +1,210 @@
 'use strict';
 
-/* ============ 表紙: スクロールキュー ============ */
-(function initScrollCue() {
-    const cue = document.querySelector('[data-scroll-next]');
-    if (!cue) return;
+/* ============================================================
+   共通ヘッダー・フッター・ドロワー・ローディング画面
+   ・fetch は使わず DOM 構築のみで完結（file:// 環境でも動作）
+   ============================================================ */
 
-    cue.addEventListener('click', function () {
-        const next = document.querySelector('.mrzStrip');
-        if (next) next.scrollIntoView({ behavior: 'smooth' });
-    });
-})();
+(function () {
 
-/* ============ 写真ページ: フィルムストリップのドラッグ／矢印操作 ============ */
-(function initFilmDeck() {
-    const viewport = document.querySelector('.filmViewport');
-    const track = document.getElementById('filmTrack');
-    const prevBtn = document.querySelector('.filmArrowPrev');
-    const nextBtn = document.querySelector('.filmArrowNext');
-    if (!viewport || !track) return;
+    var NAV_ITEMS = [
+        { label: 'TOP', href: './index.html' },
+        { label: '台北', href: './taipei/index.html' },
+        { label: '台中', href: './taichu/index.html' },
+        { label: '台南', href: './tainan/index.html' },
+        { label: '当サイトのポリシー', href: './policy.html' },
+        { label: 'お問い合わせ', href: './contact.html' }
+    ];
 
-    let offset = 0;
-    let isDragging = false;
-    let startX = 0;
-    let baseOffset = 0;
-
-    function getStep() {
-        const frame = track.querySelector('.filmFrame');
-        if (!frame) return 0;
-        const style = getComputedStyle(track);
-        const gap = parseFloat(style.columnGap) || 0;
-        return frame.getBoundingClientRect().width + gap;
+    function currentFileName() {
+        var path = window.location.pathname;
+        var last = path.substring(path.lastIndexOf('/') + 1);
+        return last === '' ? 'index.html' : last;
     }
 
-    function getMaxOffset() {
-        return Math.max(0, track.scrollWidth - viewport.clientWidth);
+    function isCurrent(href) {
+        var target = href.substring(href.lastIndexOf('/') + 1);
+        return target === currentFileName();
     }
 
-    function applyOffset() {
-        const max = getMaxOffset();
-        offset = Math.min(0, Math.max(-max, offset));
-        track.style.transform = 'translateX(' + offset + 'px)';
-    }
+    /* ---------- ヘッダーを構築 ---------- */
+    function buildHeader() {
+        var mount = document.getElementById('topPage');
+        if (!mount) return;
 
-    function moveByStep(direction) {
-        offset -= direction * getStep();
-        applyOffset();
-    }
+        var header = document.createElement('div');
+        header.className = 'siteHeader';
 
-    if (prevBtn) prevBtn.addEventListener('click', function () { moveByStep(-1); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { moveByStep(1); });
+        var logo = document.createElement('a');
+        logo.className = 'siteLogo';
+        logo.href = './index.html';
+        logo.innerHTML = '台湾 <span>FORMOSA PASSPORT</span>';
 
-    viewport.addEventListener('pointerdown', function (e) {
-        isDragging = true;
-        startX = e.clientX;
-        baseOffset = offset;
-        viewport.classList.add('dragging');
-        viewport.setPointerCapture(e.pointerId);
-        track.style.transition = 'none';
-    });
+        var nav = document.createElement('nav');
+        nav.className = 'siteNav';
+        nav.setAttribute('aria-label', 'サイト内メニュー');
 
-    viewport.addEventListener('pointermove', function (e) {
-        if (!isDragging) return;
-        offset = baseOffset + (e.clientX - startX);
-        applyOffset();
-    });
+        var navList = document.createElement('ul');
+        navList.className = 'siteNavList';
 
-    function endDrag() {
-        if (!isDragging) return;
-        isDragging = false;
-        viewport.classList.remove('dragging');
-        track.style.transition = '';
-    }
+        NAV_ITEMS.forEach(function (item) {
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.href = item.href;
+            a.textContent = item.label;
+            if (isCurrent(item.href)) {
+                a.setAttribute('aria-current', 'page');
+            }
+            li.appendChild(a);
+            navList.appendChild(li);
+        });
 
-    viewport.addEventListener('pointerup', endDrag);
-    viewport.addEventListener('pointercancel', endDrag);
-    viewport.addEventListener('pointerleave', endDrag);
+        nav.appendChild(navList);
 
-    window.addEventListener('resize', applyOffset);
-})();
+        var hamburger = document.createElement('button');
+        hamburger.type = 'button';
+        hamburger.className = 'hamburger';
+        hamburger.setAttribute('aria-label', 'メニューを開く');
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-controls', 'siteDrawer');
+        hamburger.innerHTML =
+            '<span class="hamburgerLine"></span>' +
+            '<span class="hamburgerLine"></span>' +
+            '<span class="hamburgerLine"></span>';
 
-/* ============ 査証区分: スクロールで一度だけ現れるスタンプ演出 ============ */
-(function initRegionReveal() {
-    const stamps = document.querySelectorAll('.regionStamp');
-    if (!stamps.length) return;
+        header.appendChild(logo);
+        header.appendChild(nav);
+        header.appendChild(hamburger);
+        mount.appendChild(header);
 
-    if (!('IntersectionObserver' in window)) {
-        stamps.forEach(function (el) { el.classList.add('isVisible'); });
-        return;
-    }
+        var drawer = document.createElement('div');
+        drawer.className = 'drawer';
+        drawer.id = 'siteDrawer';
 
-    const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('isVisible');
-                observer.unobserve(entry.target);
+        var drawerNav = document.createElement('nav');
+        drawerNav.setAttribute('aria-label', 'メニュー（開閉式）');
+
+        var drawerList = document.createElement('ul');
+        drawerList.className = 'drawerNavList';
+
+        NAV_ITEMS.forEach(function (item) {
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.href = item.href;
+            a.textContent = item.label;
+            if (isCurrent(item.href)) {
+                a.setAttribute('aria-current', 'page');
+            }
+            li.appendChild(a);
+            drawerList.appendChild(li);
+        });
+
+        drawerNav.appendChild(drawerList);
+        drawer.appendChild(drawerNav);
+        document.body.appendChild(drawer);
+
+        function openDrawer() {
+            drawer.classList.add('isOpen');
+            document.body.classList.add('drawerOpen');
+            hamburger.setAttribute('aria-expanded', 'true');
+            hamburger.setAttribute('aria-label', 'メニューを閉じる');
+            var firstLink = drawerList.querySelector('a');
+            if (firstLink) firstLink.focus();
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove('isOpen');
+            document.body.classList.remove('drawerOpen');
+            hamburger.setAttribute('aria-expanded', 'false');
+            hamburger.setAttribute('aria-label', 'メニューを開く');
+        }
+
+        hamburger.addEventListener('click', function () {
+            if (drawer.classList.contains('isOpen')) {
+                closeDrawer();
+            } else {
+                openDrawer();
             }
         });
-    }, { threshold: 0.3 });
 
-    stamps.forEach(function (el) { observer.observe(el); });
+        drawerList.addEventListener('click', function (e) {
+            if (e.target.tagName === 'A') closeDrawer();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && drawer.classList.contains('isOpen')) {
+                closeDrawer();
+                hamburger.focus();
+            }
+        });
+
+        window.addEventListener('scroll', function () {
+            header.classList.toggle('isScrolled', window.scrollY > 8);
+        }, { passive: true });
+    }
+
+    /* ---------- フッターを構築 ---------- */
+    function buildFooter() {
+        var mount = document.querySelector('footer');
+        if (!mount) return;
+
+        var inner = document.createElement('div');
+        inner.className = 'siteFooterInner';
+
+        var top = document.createElement('div');
+        top.className = 'siteFooterTop';
+
+        var logo = document.createElement('p');
+        logo.className = 'siteFooterLogo';
+        logo.textContent = '台湾 FORMOSA PASSPORT';
+
+        var nav = document.createElement('nav');
+        nav.className = 'siteFooterNav';
+        nav.setAttribute('aria-label', 'フッターメニュー');
+
+        NAV_ITEMS.forEach(function (item, i) {
+            if (i > 0) nav.appendChild(document.createTextNode(''));
+            var a = document.createElement('a');
+            a.href = item.href;
+            a.textContent = item.label;
+            nav.appendChild(a);
+        });
+
+        top.appendChild(logo);
+        top.appendChild(nav);
+
+        var meta = document.createElement('p');
+        meta.className = 'siteFooterMeta';
+        meta.textContent = '\u00A9 2026 FORMOSA PASSPORT ― 台湾観光案内';
+
+        inner.appendChild(top);
+        inner.appendChild(meta);
+        mount.appendChild(inner);
+    }
+
+    /* ---------- ローディング画面を隠す ---------- */
+    function hideLoading() {
+        var loading = document.getElementById('loading');
+        if (!loading) return;
+        loading.classList.add('isHidden');
+        window.setTimeout(function () {
+            loading.style.display = 'none';
+        }, 550);
+    }
+
+    function init() {
+        buildHeader();
+        buildFooter();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    // 画像読み込み完了を待つが、遅延時は最大1.2秒でフォールバック解除する
+    window.addEventListener('load', hideLoading);
+    window.setTimeout(hideLoading, 1200);
+
 })();
