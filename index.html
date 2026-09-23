@@ -5,19 +5,844 @@
     <script>document.documentElement.classList.add('js');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="./common/reset.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./common/styles/drawerStyle.css">
-    <link rel="stylesheet" href="./styles/style.css">
     <title>台湾観光案内 ― FORMOSA PASSPORT</title>
+
+    <style>
+        /* ==========================================================
+           リセット（最小限・destyle.css相当を要点のみ内蔵）
+           ========================================================== */
+        *, ::before, ::after { box-sizing: border-box; border-style: solid; border-width: 0; }
+        html { line-height: 1.15; -webkit-text-size-adjust: 100%; }
+        body { margin: 0; }
+        main { display: block; }
+        p, dl, figure { margin: 0; }
+        h1, h2, h3 { font-size: inherit; line-height: inherit; font-weight: inherit; margin: 0; }
+        ul { margin: 0; padding: 0; list-style: none; }
+        dt { font-weight: bold; }
+        dd { margin-left: 0; }
+        a { background-color: transparent; text-decoration: none; color: inherit; }
+        img, svg { vertical-align: bottom; display: block; max-width: 100%; }
+        button { -webkit-appearance: none; appearance: none; color: inherit; font: inherit; background: transparent; padding: 0; margin: 0; border: none; cursor: pointer; }
+
+        /* ==========================================================
+           デザイントークン
+           ========================================================== */
+        :root {
+            --ink: #17332C;
+            --ink-soft: #24463C;
+            --paper: #F1E8D0;
+            --paper-deep: #E4D6AF;
+            --stamp-red: #A63A2E;
+            --gold: #AE8A46;
+            --line: rgba(23, 51, 44, 0.32);
+            --line-soft: rgba(23, 51, 44, 0.16);
+
+            --font-display: "Shippori Mincho", serif;
+            --font-body: "Zen Kaku Gothic New", sans-serif;
+            --font-mono: "Space Mono", monospace;
+
+            --header-h: 64px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--header-h);
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: var(--font-body);
+        }
+
+        main {
+            overflow-x: clip;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--stamp-red);
+            outline-offset: 3px;
+        }
+
+        .pageField {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            color: var(--stamp-red);
+            margin: 0 0 12px;
+        }
+
+        .mono { font-family: var(--font-mono); }
+
+        main > section {
+            padding-inline: clamp(20px, 6vw, 96px);
+        }
+
+        /* ==========================================================
+           ヘッダー
+           ========================================================== */
+        .siteHeader {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--header-h);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-inline: clamp(16px, 4vw, 40px);
+            background: linear-gradient(180deg, rgba(23, 51, 44, 0.92), rgba(23, 51, 44, 0.72));
+            z-index: 500;
+        }
+
+        .siteHeader.isScrolled {
+            background: var(--ink);
+            box-shadow: 0 8px 24px -18px rgba(0, 0, 0, 0.6);
+        }
+
+        .siteLogo {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            color: var(--paper);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        .siteLogo span {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+        }
+
+        .siteNav { display: none; }
+
+        .siteNavList {
+            display: flex;
+            align-items: center;
+            gap: clamp(16px, 2vw, 32px);
+        }
+
+        .siteNavList a {
+            color: var(--paper);
+            font-size: 0.9rem;
+            position: relative;
+            padding-block: 6px;
+        }
+
+        .siteNavList a::after {
+            content: "";
+            position: absolute;
+            left: 0; bottom: 0;
+            width: 100%; height: 1px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.25s ease;
+        }
+
+        .siteNavList a:hover::after,
+        .siteNavList a:focus-visible::after,
+        .siteNavList a[aria-current="page"]::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        @media (min-width: 900px) {
+            .siteNav { display: block; }
+            .hamburger { display: none; }
+        }
+
+        .hamburger {
+            position: relative;
+            width: 40px; height: 40px;
+            z-index: 620;
+        }
+
+        .hamburgerLine {
+            position: absolute;
+            left: 8px; right: 8px;
+            height: 2px;
+            background: var(--paper);
+            transition: transform 0.3s ease, opacity 0.3s ease, top 0.3s ease;
+        }
+
+        .hamburgerLine:nth-child(1) { top: 14px; }
+        .hamburgerLine:nth-child(2) { top: 20px; }
+        .hamburgerLine:nth-child(3) { top: 26px; }
+
+        .hamburger[aria-expanded="true"] .hamburgerLine:nth-child(1) { top: 20px; transform: rotate(45deg); }
+        .hamburger[aria-expanded="true"] .hamburgerLine:nth-child(2) { opacity: 0; }
+        .hamburger[aria-expanded="true"] .hamburgerLine:nth-child(3) { top: 20px; transform: rotate(-45deg); }
+
+        .drawer {
+            position: fixed;
+            inset: 0;
+            z-index: 600;
+            background: var(--ink);
+            clip-path: circle(2% at calc(100% - 32px) 32px);
+            opacity: 0;
+            pointer-events: none;
+            transition: clip-path 0.55s cubic-bezier(.4, 0, .2, 1), opacity 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drawer.isOpen {
+            clip-path: circle(150% at calc(100% - 32px) 32px);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawerNavList {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(20px, 5vh, 36px);
+        }
+
+        .drawerNavList a {
+            color: var(--paper);
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 5vw, 2rem);
+        }
+
+        .drawerNavList a:hover,
+        .drawerNavList a:focus-visible { color: var(--gold); }
+
+        body.drawerOpen { overflow: hidden; }
+
+        @media (min-width: 900px) {
+            .drawer { display: none; }
+        }
+
+        /* ==========================================================
+           ローディング画面
+           ========================================================== */
+        #loading {
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            background: var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading .loadingLogo {
+            width: 56px; height: 56px;
+            animation: loadingPulse 1.4s ease-in-out infinite;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% { transform: scale(0.9); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        #loading.isHidden { opacity: 0; pointer-events: none; }
+
+        /* ==========================================================
+           フッター
+           ========================================================== */
+        .siteFooter {
+            background: var(--ink);
+            color: var(--paper-deep);
+            padding: clamp(28px, 5vh, 48px) clamp(20px, 6vw, 96px);
+            border-top: 1px solid var(--gold);
+        }
+
+        .siteFooterInner {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1180px;
+            margin-inline: auto;
+        }
+
+        .siteFooterTop {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .siteFooterLogo {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--paper);
+        }
+
+        .siteFooterNav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            font-size: 0.85rem;
+        }
+
+        .siteFooterNav a:hover,
+        .siteFooterNav a:focus-visible { color: var(--gold); }
+
+        .siteFooterMeta {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: rgba(241, 232, 208, 0.5);
+            border-top: 1px solid rgba(241, 232, 208, 0.15);
+            padding-top: 16px;
+        }
+
+        /* ==========================================================
+           01. 表紙
+           ========================================================== */
+        .cover {
+            padding: 0 !important;
+            position: relative;
+            height: 100vh;
+            min-height: 560px;
+            background: var(--ink);
+        }
+
+        @supports (height: 100svh) {
+            .cover { height: 100svh; }
+        }
+
+        .coverFrame {
+            position: absolute;
+            inset: clamp(10px, 2.4vw, 22px);
+            border: 1px solid rgba(241, 232, 208, 0.55);
+        }
+
+        .coverFrame::before {
+            content: "";
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(241, 232, 208, 0.25);
+            pointer-events: none;
+        }
+
+        .coverCorner { position: absolute; width: 22px; height: 22px; z-index: 3; }
+        .coverCornerTL { top: -1px; left: -1px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+        .coverCornerTR { top: -1px; right: -1px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+        .coverCornerBL { bottom: -1px; left: -1px; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+        .coverCornerBR { bottom: -1px; right: -1px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+
+        .coverPhoto {
+            position: absolute;
+            inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: saturate(0.92);
+            opacity: 0;
+            animation: coverPhotoIn 1.4s ease forwards 0.15s;
+        }
+
+        .cover::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(23, 51, 44, 0.72) 0%, rgba(23, 51, 44, 0.18) 38%, rgba(23, 51, 44, 0.55) 100%);
+            z-index: 1;
+        }
+
+        .coverText {
+            position: absolute;
+            left: clamp(28px, 7vw, 88px);
+            bottom: clamp(90px, 16vh, 160px);
+            z-index: 2;
+            color: var(--paper);
+            max-width: 620px;
+        }
+
+        .coverField {
+            font-family: var(--font-mono);
+            font-size: clamp(0.65rem, 0.5vw + 0.5rem, 0.8rem);
+            color: var(--paper-deep);
+            margin: 0 0 18px;
+            opacity: 0;
+            animation: coverTextIn 0.9s ease forwards 0.5s;
+        }
+
+        .coverTitle {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(3.2rem, 4vw + 2rem, 6.4rem);
+            line-height: 1;
+            margin: 0 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: clamp(12px, 2vw, 24px);
+            opacity: 0;
+            animation: coverTextIn 0.9s ease forwards 0.7s;
+        }
+
+        .coverTitleSub {
+            font-family: var(--font-mono);
+            font-size: clamp(0.85rem, 1vw, 1.15rem);
+            font-weight: 400;
+            color: var(--gold);
+        }
+
+        .coverLede {
+            font-size: clamp(0.95rem, 0.4vw + 0.85rem, 1.15rem);
+            line-height: 1.9;
+            margin: 0;
+            opacity: 0;
+            animation: coverTextIn 0.9s ease forwards 0.9s;
+        }
+
+        @keyframes coverPhotoIn { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }
+        @keyframes coverTextIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+        .coverStamp {
+            position: absolute;
+            right: clamp(20px, 5vw, 64px);
+            top: clamp(84px, 12vh, 120px);
+            width: clamp(96px, 11vw, 150px);
+            z-index: 2;
+            opacity: 0;
+            animation: stampIn 1s cubic-bezier(.2, .9, .3, 1.2) forwards 1.15s;
+        }
+
+        @keyframes stampIn { from { opacity: 0; transform: rotate(-30deg) scale(0.7); } to { opacity: 1; transform: rotate(-14deg) scale(1); } }
+
+        .stampSvg { width: 100%; height: auto; display: block; animation: stampSpin 40s linear infinite; }
+        .stampSvgSmall { animation-duration: 34s; }
+        @keyframes stampSpin { to { transform: rotate(360deg); } }
+
+        .stampRing { fill: none; stroke: var(--stamp-red); stroke-width: 2.5; }
+        .coverStamp .stampRing, .coverStamp .stampRingInner { stroke: var(--paper); }
+        .stampRingInner { fill: none; stroke: var(--stamp-red); stroke-width: 1; }
+        .stampArcText { font-family: var(--font-mono); font-size: 10.5px; fill: var(--stamp-red); }
+        .coverStamp .stampArcText { fill: var(--paper); }
+        .stampCenterText { font-family: var(--font-display); font-weight: 700; font-size: 26px; fill: var(--paper); }
+        .stampCenterTextSm { font-family: var(--font-mono); font-size: 11px; fill: var(--paper); }
+
+        .scrollCue {
+            position: absolute;
+            left: clamp(28px, 7vw, 88px);
+            bottom: clamp(28px, 4vh, 44px);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--paper-deep);
+            padding: 4px;
+        }
+
+        .scrollCueLine {
+            width: 1px; height: 34px;
+            background: var(--paper-deep);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scrollCueLine::after {
+            content: "";
+            position: absolute;
+            left: 0; top: -100%;
+            width: 100%; height: 100%;
+            background: var(--gold);
+            animation: cueDrip 2.2s ease-in-out infinite;
+        }
+
+        @keyframes cueDrip { 0% { top: -100%; } 60% { top: 100%; } 100% { top: 100%; } }
+
+        .scrollCueText { font-family: var(--font-mono); font-size: 0.68rem; }
+
+        .mrzStrip {
+            background: var(--ink);
+            color: rgba(241, 232, 208, 0.55);
+            padding: 14px clamp(20px, 6vw, 96px);
+            overflow: hidden;
+        }
+
+        .mrzLine {
+            font-family: var(--font-mono);
+            font-size: clamp(0.55rem, 0.3vw + 0.5rem, 0.72rem);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ==========================================================
+           02. 招待状
+           ========================================================== */
+        .invitation { padding-block: clamp(64px, 10vh, 120px); border-bottom: 1px dashed var(--line); }
+
+        .invitationInner {
+            display: grid;
+            gap: clamp(32px, 5vw, 56px);
+            max-width: 1180px;
+            margin-inline: auto;
+        }
+
+        .invitationHeading {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(1.8rem, 1.6vw + 1.3rem, 2.6rem);
+            line-height: 1.45;
+            margin: 0 0 24px;
+        }
+
+        .invitationBody {
+            font-size: clamp(0.9rem, 0.3vw + 0.8rem, 1.05rem);
+            line-height: 2;
+            text-align: justify;
+            max-width: 46ch;
+        }
+
+        .invitationPhoto { position: relative; justify-self: center; max-width: 460px; width: 100%; }
+
+        .invitationPhoto img {
+            width: 100%; height: auto;
+            transform: rotate(-1.6deg);
+            box-shadow: 0 18px 40px -18px rgba(23, 51, 44, 0.45);
+            border: 6px solid #fff;
+        }
+
+        .photoTape {
+            position: absolute;
+            width: 84px; height: 26px;
+            background: rgba(174, 138, 70, 0.55);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+            z-index: 2;
+        }
+
+        .photoTapeTop { top: -12px; left: -14px; transform: rotate(-40deg); }
+        .photoTapeBottom { bottom: -12px; right: -10px; transform: rotate(-38deg); }
+
+        @media (min-width: 860px) {
+            .invitationInner { grid-template-columns: 1.1fr 0.9fr; align-items: center; }
+        }
+
+        /* ==========================================================
+           03. 写真ページ
+           ========================================================== */
+        .photoPage { padding-block: clamp(56px, 9vh, 100px); border-bottom: 1px dashed var(--line); }
+
+        .photoPageHeading {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(1.7rem, 1.4vw + 1.2rem, 2.3rem);
+            margin: 0 0 40px;
+        }
+
+        .filmDeck { position: relative; display: flex; align-items: center; gap: 10px; }
+
+        .filmViewport {
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .js .filmViewport { overflow: hidden; cursor: grab; }
+        .js .filmViewport.dragging { cursor: grabbing; }
+
+        .filmTrack {
+            display: flex;
+            gap: clamp(20px, 3vw, 40px);
+            padding: 24px 4px 32px;
+            margin: 0;
+            list-style: none;
+            will-change: transform;
+        }
+
+        .js .filmTrack { transition: transform 0.5s cubic-bezier(.2, .7, .3, 1); }
+
+        .filmFrame {
+            flex: 0 0 auto;
+            width: clamp(200px, 22vw, 300px);
+            background: #fff;
+            padding: 10px 10px 26px;
+            box-shadow: 0 16px 32px -18px rgba(23, 51, 44, 0.4);
+            transform: rotate(calc(var(--r, 0) * 1deg));
+            position: relative;
+        }
+
+        .filmFrame:nth-child(1) { --r: -3; }
+        .filmFrame:nth-child(2) { --r: 2; }
+        .filmFrame:nth-child(3) { --r: -2; }
+        .filmFrame:nth-child(4) { --r: 3; }
+        .filmFrame:nth-child(5) { --r: -1; }
+
+        .filmFrame::before {
+            content: "";
+            position: absolute;
+            left: 50%; bottom: 8px;
+            transform: translateX(-50%);
+            width: 34px; height: 34px;
+            background: radial-gradient(circle, var(--paper-deep) 0 3px, transparent 4px);
+        }
+
+        .filmFrame img { width: 100%; height: clamp(150px, 18vw, 230px); object-fit: cover; }
+
+        .filmArrow {
+            flex: 0 0 auto;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--line);
+            color: var(--ink);
+            font-size: 1.4rem;
+            line-height: 1;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            display: none;
+        }
+
+        .js .filmArrow { display: block; }
+        .filmArrow:hover { background: var(--ink); color: var(--paper); }
+
+        /* ==========================================================
+           04. 査証区分
+           ========================================================== */
+        .regions { padding-block: clamp(56px, 9vh, 100px); border-bottom: 1px dashed var(--line); }
+
+        .regionsHeading {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(1.7rem, 1.4vw + 1.2rem, 2.3rem);
+            margin: 0 0 16px;
+        }
+
+        .regionsLede { max-width: 56ch; line-height: 1.9; margin: 0 0 48px; }
+
+        .regionRoute {
+            position: relative;
+            display: grid;
+            gap: 56px;
+            justify-items: center;
+            padding-block: 12px;
+        }
+
+        .regionPath { display: none; }
+
+        .regionStamp {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            color: var(--ink);
+        }
+
+        .js .regionStamp { opacity: 0; transform: translateY(16px); }
+        .js .regionStamp.isVisible { animation: regionIn 0.6s ease forwards; animation-delay: calc(var(--i) * 0.12s); }
+        @keyframes regionIn { to { opacity: 1; transform: translateY(0); } }
+
+        .regionStampCircle {
+            width: 128px; height: 128px;
+            border-radius: 50%;
+            border: 2px solid var(--stamp-red);
+            outline: 1px solid var(--stamp-red);
+            outline-offset: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .regionStampCircle img { width: 100%; height: auto; object-fit: contain; }
+
+        .regionStamp:hover .regionStampCircle,
+        .regionStamp:focus-visible .regionStampCircle {
+            transform: rotate(-6deg) scale(1.05);
+            box-shadow: 0 14px 30px -16px rgba(166, 58, 46, 0.6);
+        }
+
+        .regionStampName { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; text-align: center; }
+        .regionStampName em { display: block; font-style: normal; font-family: var(--font-mono); font-size: 0.7rem; color: var(--stamp-red); margin-top: 4px; }
+
+        @media (min-width: 860px) {
+            .regionRoute { grid-template-columns: repeat(3, 1fr); gap: 24px; min-height: 220px; align-items: start; }
+            .regionPath { display: block; position: absolute; inset: 0 0 auto 0; top: 58px; width: 100%; height: 220px; pointer-events: none; }
+            .regionPath path { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 6 8; }
+            .regionStamp:nth-child(2) { margin-top: 44px; }
+            .regionStamp:nth-child(3) { margin-top: 4px; }
+        }
+
+        /* ==========================================================
+           05. 搭乗券
+           ========================================================== */
+        .events { padding-block: clamp(56px, 9vh, 100px); border-bottom: 1px dashed var(--line); }
+
+        .eventsHeading {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(1.7rem, 1.4vw + 1.2rem, 2.3rem);
+            margin: 0 0 40px;
+        }
+
+        .ticketList { display: grid; gap: 32px; }
+
+        .ticket {
+            display: grid;
+            grid-template-columns: 1fr;
+            background: #fff;
+            box-shadow: 0 20px 40px -24px rgba(23, 51, 44, 0.4);
+            position: relative;
+        }
+
+        .ticketMain { display: grid; gap: 0; }
+        .ticketPhoto { aspect-ratio: 16 / 9; overflow: hidden; }
+        .ticketPhoto img { width: 100%; height: 100%; object-fit: cover; }
+        .ticketBody { padding: clamp(20px, 3vw, 32px); }
+        .ticketDest { font-family: var(--font-mono); font-size: 0.7rem; color: var(--stamp-red); margin: 0 0 10px; }
+        .ticketTitle { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.2rem, 0.6vw + 1rem, 1.5rem); line-height: 1.4; margin: 0 0 10px; }
+        .ticketDate { font-family: var(--font-mono); font-size: 0.8rem; margin: 0 0 16px; color: var(--ink-soft); }
+        .ticketText { line-height: 1.9; text-align: justify; }
+
+        .ticketStub {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px clamp(20px, 3vw, 32px);
+            border-top: 1px dashed var(--line);
+            position: relative;
+        }
+
+        .ticketStub::before, .ticketStub::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--paper);
+        }
+
+        .ticketStub::before { left: -10px; }
+        .ticketStub::after { right: -10px; }
+
+        .ticketStubLabel { font-family: var(--font-mono); font-size: 0.65rem; color: var(--ink-soft); }
+        .ticketStubValue { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; margin-right: auto; padding-left: 10px; }
+        .ticketStubBarcode {
+            width: 90px; height: 26px;
+            background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 5px, var(--ink) 5px 6px, transparent 6px 10px);
+            opacity: 0.75;
+        }
+
+        @media (min-width: 780px) {
+            .ticket { grid-template-columns: 1fr auto; }
+            .ticketMain { grid-template-columns: 0.9fr 1.1fr; }
+            .ticketPhoto { aspect-ratio: auto; height: 100%; }
+            .ticketStub { flex-direction: column; justify-content: center; width: 130px; border-top: none; border-left: 1px dashed var(--line); }
+            .ticketStub::before { top: -10px; left: 50%; transform: translateX(-50%); }
+            .ticketStub::after { top: auto; bottom: -10px; left: 50%; right: auto; transform: translateX(-50%); }
+            .ticketStubValue { margin-right: 0; padding-left: 0; writing-mode: vertical-rl; }
+            .ticketStubBarcode {
+                writing-mode: vertical-rl;
+                width: 26px; height: 90px;
+                background: repeating-linear-gradient(0deg, var(--ink) 0 2px, transparent 2px 5px, var(--ink) 5px 6px, transparent 6px 10px);
+            }
+        }
+
+        /* ==========================================================
+           06. 旅券データページ
+           ========================================================== */
+        .databook { padding-block: clamp(56px, 9vh, 110px) clamp(80px, 10vh, 130px); }
+
+        .databookInner {
+            max-width: 1180px;
+            margin-inline: auto;
+            border: 1px solid var(--line);
+            padding: clamp(28px, 4vw, 56px);
+            position: relative;
+            display: grid;
+            gap: 40px;
+        }
+
+        .databookStamp { justify-self: center; width: clamp(120px, 14vw, 160px); position: relative; text-align: center; }
+
+        .databookFlag {
+            width: 46%;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+        }
+
+        .databookHeading {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(1.7rem, 1.4vw + 1.2rem, 2.3rem);
+            margin: 0 0 32px;
+        }
+
+        .databookGrid { display: grid; gap: 0; margin: 0 0 40px; border-top: 1px solid var(--line-soft); }
+
+        .databookRow {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 20px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--line-soft);
+        }
+
+        .databookRow dt { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); }
+        .databookRow dd { line-height: 1.8; }
+
+        .databookNotes { display: grid; gap: 28px; }
+        .databookNote h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; margin: 0 0 10px; }
+        .databookNote p { line-height: 1.9; text-align: justify; }
+
+        @media (min-width: 860px) {
+            .databookInner { grid-template-columns: 200px 1fr; align-items: start; }
+            .databookNotes { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
 </head>
 
 <body>
-    <header id="topPage"></header>
+
+    <!-- ============ 共通ヘッダー（静的マークアップ／JS構築なし） ============ -->
+    <header class="siteHeader" id="siteHeader">
+        <a class="siteLogo" href="./index.html">台湾 <span>FORMOSA PASSPORT</span></a>
+
+        <nav class="siteNav" aria-label="サイト内メニュー">
+            <ul class="siteNavList">
+                <li><a href="./index.html" aria-current="page">TOP</a></li>
+                <li><a href="./taipei/index.html">台北</a></li>
+                <li><a href="./taichu/index.html">台中</a></li>
+                <li><a href="./tainan/index.html">台南</a></li>
+                <li><a href="./policy.html">当サイトのポリシー</a></li>
+                <li><a href="./contact.html">お問い合わせ</a></li>
+            </ul>
+        </nav>
+
+        <button type="button" class="hamburger" id="hamburgerBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="siteDrawer">
+            <span class="hamburgerLine"></span>
+            <span class="hamburgerLine"></span>
+            <span class="hamburgerLine"></span>
+        </button>
+    </header>
+
+    <div class="drawer" id="siteDrawer">
+        <nav aria-label="メニュー（開閉式）">
+            <ul class="drawerNavList">
+                <li><a href="./index.html">TOP</a></li>
+                <li><a href="./taipei/index.html">台北</a></li>
+                <li><a href="./taichu/index.html">台中</a></li>
+                <li><a href="./tainan/index.html">台南</a></li>
+                <li><a href="./policy.html">当サイトのポリシー</a></li>
+                <li><a href="./contact.html">お問い合わせ</a></li>
+            </ul>
+        </nav>
+    </div>
 
     <div id="loading">
         <img src="./common/images/logo.svg" alt="読み込み中" class="loadingLogo">
@@ -36,7 +861,7 @@
                 <img class="coverPhoto" src="./images/formosa1.jpg" alt="緑の山々と栄える街並み">
 
                 <div class="coverText">
-                    <p class="coverField">REPUBLIC OF CHINA ・ 中華民国旅券</p>
+                    <p class="coverField">TAIWAN ・ 台湾旅券</p>
                     <h1 class="coverTitle">台湾<span class="coverTitleSub">FORMOSA</span></h1>
                     <p class="coverLede">美しの島へ、ページをめくるように旅をする。</p>
                 </div>
@@ -61,7 +886,6 @@
             </div>
         </section>
 
-        <!-- MRZ 装飾帯（機械可読ゾーン風） -->
         <div class="mrzStrip" aria-hidden="true">
             <p class="mrzLine">P&lt;TWNFORMOSA&lt;&lt;EMERALD&lt;ISLAND&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
             <p class="mrzLine">2603017&lt;TPE2609221M3703019&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;08</p>
@@ -117,21 +941,15 @@
                 </svg>
 
                 <a class="regionStamp" href="./taipei/index.html" style="--i:0">
-                    <span class="regionStampCircle">
-                        <img src="./images/mapTaipei.png" alt="">
-                    </span>
+                    <span class="regionStampCircle"><img src="./images/mapTaipei.png" alt=""></span>
                     <span class="regionStampName">台北 <em>TAIPEI</em></span>
                 </a>
                 <a class="regionStamp" href="./taichu/index.html" style="--i:1">
-                    <span class="regionStampCircle">
-                        <img src="./images/mapTaichung.png" alt="">
-                    </span>
+                    <span class="regionStampCircle"><img src="./images/mapTaichung.png" alt=""></span>
                     <span class="regionStampName">台中 <em>TAICHUNG</em></span>
                 </a>
                 <a class="regionStamp" href="./tainan/index.html" style="--i:2">
-                    <span class="regionStampCircle">
-                        <img src="./images/mapTainan.png" alt="">
-                    </span>
+                    <span class="regionStampCircle"><img src="./images/mapTainan.png" alt=""></span>
                     <span class="regionStampName">台南 <em>TAINAN</em></span>
                 </a>
             </div>
@@ -145,9 +963,7 @@
             <div class="ticketList">
                 <article class="ticket">
                     <div class="ticketMain">
-                        <div class="ticketPhoto">
-                            <img src="./images/eventLantane .jpg" alt="夜景、飛び交うランタン">
-                        </div>
+                        <div class="ticketPhoto"><img src="./images/eventLantane .jpg" alt="夜景、飛び交うランタン"></div>
                         <div class="ticketBody">
                             <p class="ticketDest">TAIPEI ― PINGXI</p>
                             <h3 class="ticketTitle">台湾ランタンフェスティバル</h3>
@@ -166,9 +982,7 @@
 
                 <article class="ticket">
                     <div class="ticketMain">
-                        <div class="ticketPhoto">
-                            <img src="./images/eventCountdown.jpg" alt="台北101の花火">
-                        </div>
+                        <div class="ticketPhoto"><img src="./images/eventCountdown.jpg" alt="台北101の花火"></div>
                         <div class="ticketBody">
                             <p class="ticketDest">TAIPEI ― SIGNATURE TOWER</p>
                             <h3 class="ticketTitle">台北最High新年城<br>カウントダウンパーティー</h3>
@@ -196,7 +1010,7 @@
                         <circle cx="80" cy="80" r="58" class="stampRingInner" fill="none" stroke-width="1" />
                         <path id="stampArcData" d="M 15,75 A 60,60 0 1 1 135,75" fill="none" stroke="none" />
                         <text class="stampArcText">
-                            <textPath href="#stampArcData" xlink:href="#stampArcData" startOffset="50%" text-anchor="middle">REPUBLIC OF CHINA・TAIWAN</textPath>
+                            <textPath href="#stampArcData" xlink:href="#stampArcData" startOffset="50%" text-anchor="middle">TAIWAN・FORMOSA</textPath>
                         </text>
                     </svg>
                     <img class="databookFlag" src="./common/images/nationalFlag.png" alt="台湾の国旗">
@@ -207,7 +1021,7 @@
                     <h2 class="databookHeading">台湾基本情報</h2>
 
                     <dl class="databookGrid">
-                        <div class="databookRow"><dt>正式名称</dt><dd>中華民国・台湾<br><span class="mono">Republic of China, Taiwan</span></dd></div>
+                        <div class="databookRow"><dt>名称</dt><dd>台湾<br><span class="mono">Taiwan</span></dd></div>
                         <div class="databookRow"><dt>首都</dt><dd>台北</dd></div>
                         <div class="databookRow"><dt>人口</dt><dd>約2,300万人</dd></div>
                         <div class="databookRow"><dt>面積</dt><dd>約3万6,000km²</dd></div>
@@ -234,10 +1048,179 @@
 
     </main>
 
-    <footer></footer>
+    <!-- ============ 共通フッター（静的マークアップ） ============ -->
+    <footer class="siteFooter">
+        <div class="siteFooterInner">
+            <div class="siteFooterTop">
+                <p class="siteFooterLogo">台湾 FORMOSA PASSPORT</p>
+                <nav class="siteFooterNav" aria-label="フッターメニュー">
+                    <a href="./index.html">TOP</a>
+                    <a href="./taipei/index.html">台北</a>
+                    <a href="./taichu/index.html">台中</a>
+                    <a href="./tainan/index.html">台南</a>
+                    <a href="./policy.html">当サイトのポリシー</a>
+                    <a href="./contact.html">お問い合わせ</a>
+                </nav>
+            </div>
+            <p class="siteFooterMeta">© 2026 FORMOSA PASSPORT ― 台湾観光案内</p>
+        </div>
+    </footer>
 
-    <script src="./common/scripts/script.js"></script>
-    <script src="./scripts/script.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            /* ---------- ハンバーガー／ドロワー ---------- */
+            var hamburger = document.getElementById('hamburgerBtn');
+            var drawer = document.getElementById('siteDrawer');
+            var header = document.getElementById('siteHeader');
+
+            if (hamburger && drawer) {
+                var drawerLinks = drawer.querySelectorAll('a');
+
+                function openDrawer() {
+                    drawer.classList.add('isOpen');
+                    document.body.classList.add('drawerOpen');
+                    hamburger.setAttribute('aria-expanded', 'true');
+                    hamburger.setAttribute('aria-label', 'メニューを閉じる');
+                }
+
+                function closeDrawer() {
+                    drawer.classList.remove('isOpen');
+                    document.body.classList.remove('drawerOpen');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                    hamburger.setAttribute('aria-label', 'メニューを開く');
+                }
+
+                hamburger.addEventListener('click', function () {
+                    if (drawer.classList.contains('isOpen')) { closeDrawer(); } else { openDrawer(); }
+                });
+
+                Array.prototype.forEach.call(drawerLinks, function (a) {
+                    a.addEventListener('click', closeDrawer);
+                });
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && drawer.classList.contains('isOpen')) {
+                        closeDrawer();
+                        hamburger.focus();
+                    }
+                });
+            }
+
+            if (header) {
+                window.addEventListener('scroll', function () {
+                    header.classList.toggle('isScrolled', window.scrollY > 8);
+                }, { passive: true });
+            }
+
+            /* ---------- ローディング画面 ---------- */
+            var loading = document.getElementById('loading');
+            function hideLoading() {
+                if (!loading) return;
+                loading.classList.add('isHidden');
+                window.setTimeout(function () { loading.style.display = 'none'; }, 550);
+            }
+            window.addEventListener('load', hideLoading);
+            window.setTimeout(hideLoading, 1200);
+
+            /* ---------- 表紙: スクロールキュー ---------- */
+            var cue = document.querySelector('[data-scroll-next]');
+            if (cue) {
+                cue.addEventListener('click', function () {
+                    var next = document.querySelector('.mrzStrip');
+                    if (next) next.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+
+            /* ---------- 写真ページ: フィルムストリップ ---------- */
+            var viewport = document.querySelector('.filmViewport');
+            var track = document.getElementById('filmTrack');
+            var prevBtn = document.querySelector('.filmArrowPrev');
+            var nextBtn = document.querySelector('.filmArrowNext');
+
+            if (viewport && track) {
+                var offset = 0;
+                var isDragging = false;
+                var startX = 0;
+                var baseOffset = 0;
+
+                function getStep() {
+                    var frame = track.querySelector('.filmFrame');
+                    if (!frame) return 0;
+                    var style = getComputedStyle(track);
+                    var gap = parseFloat(style.columnGap) || 0;
+                    return frame.getBoundingClientRect().width + gap;
+                }
+
+                function getMaxOffset() {
+                    return Math.max(0, track.scrollWidth - viewport.clientWidth);
+                }
+
+                function applyOffset() {
+                    var max = getMaxOffset();
+                    offset = Math.min(0, Math.max(-max, offset));
+                    track.style.transform = 'translateX(' + offset + 'px)';
+                }
+
+                function moveByStep(direction) {
+                    offset -= direction * getStep();
+                    applyOffset();
+                }
+
+                if (prevBtn) prevBtn.addEventListener('click', function () { moveByStep(-1); });
+                if (nextBtn) nextBtn.addEventListener('click', function () { moveByStep(1); });
+
+                viewport.addEventListener('pointerdown', function (e) {
+                    isDragging = true;
+                    startX = e.clientX;
+                    baseOffset = offset;
+                    viewport.classList.add('dragging');
+                    viewport.setPointerCapture(e.pointerId);
+                    track.style.transition = 'none';
+                });
+
+                viewport.addEventListener('pointermove', function (e) {
+                    if (!isDragging) return;
+                    offset = baseOffset + (e.clientX - startX);
+                    applyOffset();
+                });
+
+                function endDrag() {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    viewport.classList.remove('dragging');
+                    track.style.transition = '';
+                }
+
+                viewport.addEventListener('pointerup', endDrag);
+                viewport.addEventListener('pointercancel', endDrag);
+                viewport.addEventListener('pointerleave', endDrag);
+                window.addEventListener('resize', applyOffset);
+            }
+
+            /* ---------- 査証区分: スクロール演出 ---------- */
+            var stamps = document.querySelectorAll('.regionStamp');
+            if (stamps.length) {
+                var stampList = Array.prototype.slice.call(stamps);
+
+                if (!('IntersectionObserver' in window)) {
+                    stampList.forEach(function (el) { el.classList.add('isVisible'); });
+                } else {
+                    var observer = new IntersectionObserver(function (entries) {
+                        entries.forEach(function (entry) {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('isVisible');
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.3 });
+
+                    stampList.forEach(function (el) { observer.observe(el); });
+                }
+            }
+        })();
+    </script>
 </body>
 
 </html>
